@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portal</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#071025;color:#e6eef8}
+    .card{width:360px;padding:20px;border-radius:12px;background:linear-gradient(180deg,#071428,#0b1724);box-shadow:0 10px 30px rgba(0,0,0,.6);border:1px solid rgba(255,255,255,0.03)}
+    h1{margin:0 0 8px;font-size:20px}
+    p{margin:0 0 14px;color:#9aa8bf;font-size:13px}
+    .row{display:flex;gap:8px}
+    input{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:inherit;font-size:16px}
+    button{padding:10px 12px;border-radius:8px;border:none;background:#7c3aed;color:#fff;cursor:pointer;font-weight:600}
+    .error{margin-top:12px;padding:10px;border-radius:8px;background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.18);display:none;text-align:center}
+    footer{margin-top:12px;font-size:12px;color:#9aa8bf;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="title">
+    <h1 id="title">Portal</h1>
+    <p>Enter the 6-digit code to continue.</p>
+
+    <div>
+      <div class="row">
+        <input id="code" maxlength="6" inputmode="numeric" placeholder="Enter 6-digit code" aria-label="6-digit code">
+        <button id="enter">Enter</button>
+      </div>
+      <div id="err" class="error" role="alert">Incorrect code!</div>
+      <footer>Demo portal — code is checked client-side (visible in source).</footer>
+    </div>
+  </div>
+
+  <script>
+    // CONFIG
+    const CORRECT = '747074'; // the 6-digit code
+    const REDIRECT_URL = 'https://securly.myftp.org/'; // final redirect target
+    const ERROR_MS = 2000;
+
+    const input = document.getElementById('code');
+    const err = document.getElementById('err');
+    const btn = document.getElementById('enter');
+    let t = null;
+
+    function showError() {
+      clearTimeout(t);
+      err.style.display = 'block';
+      input.value = '';
+      input.focus();
+      t = setTimeout(()=> err.style.display = 'none', ERROR_MS);
+    }
+
+    function submit() {
+      const v = (input.value||'').trim();
+      if(!/^\d{6}$/.test(v)) { showError(); return; }
+      if(v === CORRECT) {
+        // redirect (replace history so the code isn't left in back-button history)
+        location.replace(REDIRECT_URL);
+      } else showError();
+    }
+
+    btn.addEventListener('click', (e)=>{ e.preventDefault(); submit(); });
+    input.addEventListener('keydown', (e)=> { if(e.key === 'Enter') { e.preventDefault(); submit(); }});
+    window.addEventListener('load', ()=> input.focus());
+  </script>
+</body>
+</html>
