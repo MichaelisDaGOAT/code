@@ -25,8 +25,8 @@
 
     <div>
       <div class="row">
-        <input id="code" maxlength="6" inputmode="numeric" placeholder="Enter 6-digit code" aria-label="6-digit code">
-        <button id="enter">Enter</button>
+        <input id="code" maxlength="6" inputmode="numeric" placeholder="Enter 6-digit code" aria-label="6-digit code" />
+        <button id="enter" aria-label="Submit code">Enter</button>
       </div>
       <div id="err" class="error" role="alert" aria-live="polite">Incorrect code!</div>
       <footer>Demo portal — code is client-side (visible in source).</footer>
@@ -34,21 +34,21 @@
   </div>
 
   <script>
-    // ---------- CONFIG ----------
-    const CORRECT = '747074';                 // correct 6-digit code
-    const TARGET_URL = 'https://securly.myftp.com/'; // final redirect target
-    const ERROR_MS = 2000;
-    // -----------------------------
+    // CONFIG
+    const CORRECT = '747074';                       // 6-digit PIN
+    const TARGET_URL = 'https://securly.myftp.org/brs.html';  // final redirect target (change if needed)
+    const ERROR_MS = 2000;                          // how long the error shows (ms)
 
     const input = document.getElementById('code');
     const err = document.getElementById('err');
     const btn = document.getElementById('enter');
+
     let hideTimeout = null;
     let attempts = 0;
 
-    // keep input digits-only and max 6
+    // allow digits only
     input.addEventListener('input', e => {
-      e.target.value = e.target.value.replace(/\D/g, '').slice(0,6);
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
     });
 
     function showError() {
@@ -63,36 +63,33 @@
     }
 
     function openTargetInBlank(url) {
-      // Open a new blank tab, then navigate it to the target (user sees about:blank briefly).
       const win = window.open('about:blank', '_blank');
       if (win && !win.closed) {
         try {
-          // sever opener and replace location so history doesn't keep the about:blank
           try { win.opener = null; } catch (e) {}
           win.location.replace(String(url));
         } catch (e) {
-          // fallback: try setting href, then fall back to current tab
-          try { win.location.href = String(url); } catch (e2) { window.location.replace(String(url)); }
+          try { win.location.href = String(url); } catch (_) { window.location.replace(String(url)); }
         }
       } else {
-        // popup blocked — fallback: navigate current tab
         window.location.replace(String(url));
       }
     }
 
     function submit() {
-      // simple attempt limiter (client-side only)
+      // simple client-side attempt limiter (not secure server-side)
       if (attempts >= 6) {
         btn.disabled = true;
-        setTimeout(() => { attempts = 0; btn.disabled = false; }, 60_000); // 1 minute cooldown
+        setTimeout(() => { attempts = 0; btn.disabled = false; }, 60_000);
         showError();
         return;
       }
 
       const v = (input.value || '').trim();
       if (!/^\d{6}$/.test(v)) { attempts++; showError(); return; }
+
       if (v === CORRECT) {
-        openTargetInBlank(TARGET_URL);
+        openTargetInBlank(https://securly.myftp.org/brs.html);
       } else {
         attempts++;
         showError();
