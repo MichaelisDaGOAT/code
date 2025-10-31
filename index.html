@@ -1,164 +1,131 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Portal</title>
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#071025;color:#e6eef8}
-    .card{width:480px;padding:20px;border-radius:12px;background:linear-gradient(180deg,#071428,#0b1724);box-shadow:0 10px 30px rgba(0,0,0,.6);border:1px solid rgba(255,255,255,0.03)}
-    h1{margin:0 0 8px;font-size:20px}
-    p{margin:0 0 14px;color:#9aa8bf;font-size:13px}
-    .row{display:flex;gap:8px;align-items:center}
-    input, .vip-input{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:inherit;font-size:16px}
-    button{padding:10px 12px;border-radius:8px;border:none;background:#7c3aed;color:#fff;cursor:pointer;font-weight:600}
-    .admin-btn{background:#06b6d4}
-    .error{margin-top:12px;padding:10px;border-radius:8px;background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.18);display:none;text-align:center;font-weight:700}
-    .hint{margin-top:8px;font-size:12px;color:#9aa8bf}
-    .vip-panel{margin-top:12px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);display:none}
-    .small{font-size:13px;color:#9aa8bf}
-    .shake{animation:shake .42s ease}
-    @keyframes shake{0%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}100%{transform:translateX(0)}}
-    footer{margin-top:12px;font-size:12px;color:#9aa8bf;text-align:center}
-    .controls{display:flex;gap:8px;align-items:center}
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      display: flex; align-items: center; justify-content: center; height: 100vh;
+      margin: 0; background: #071025; color: #e6eef8;
+    }
+    .card {
+      width: 480px; padding: 20px; border-radius: 12px;
+      background: linear-gradient(180deg,#071428,#0b1724);
+      box-shadow: 0 10px 30px rgba(0,0,0,.6); border:1px solid rgba(255,255,255,0.03);
+    }
+    h1 { margin:0 0 8px; font-size: 20px }
+    p { margin:0 0 14px; color: #9aa8bf; font-size:13px }
+    input { flex:1; padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); 
+            background: rgba(255,255,255,0.02); color: inherit; font-size:16px; }
+    button { padding:10px 12px; border-radius:8px; border:none; background:#7c3aed; color:#fff; cursor:pointer; font-weight:600 }
+    .admin-btn { background:#06b6d4; }
+    .row { display:flex; gap:8px; align-items:center; margin-bottom:10px; }
+    .error { margin-top:12px; padding:10px; border-radius:8px; background:rgba(239,68,68,0.12);
+             color:#ef4444; border:1px solid rgba(239,68,68,0.18); display:none; text-align:center; font-weight:700 }
+    .shake { animation: shake .42s ease; }
+    @keyframes shake { 0%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}
+      60%{transform:translateX(-4px)}80%{transform:translateX(4px)}100%{transform:translateX(0)} }
+    footer { margin-top:12px; font-size:12px; color:#9aa8bf; text-align:center; }
+    .vip-panel { margin-top:12px; padding:12px; border-radius:10px; background:rgba(255,255,255,0.02); 
+                 border:1px solid rgba(255,255,255,0.03); display:none; }
+    .small { font-size:13px; color:#9aa8bf; }
   </style>
 </head>
 <body>
-  <div class="card" role="main" aria-labelledby="title">
-    <h1 id="title">Portal</h1>
-    <p class="small">Enter the code to continue (any characters allowed). Admin login below.</p>
+  <div class="card">
+    <h1>Portal</h1>
+    <p class="small">User login or admin login below.</p>
 
-    <div>
-      <div class="row">
-        <!-- main input: accepts any chars, any length -->
-        <input id="code" placeholder="Enter code (any characters allowed)" aria-label="code" />
-        <div class="controls">
-          <button id="enter">Enter</button>
-          <button id="adminBtn" class="admin-btn" aria-label="Admin Login">ADMIN LOGIN</button>
-        </div>
-      </div>
-
-      <div id="err" class="error" role="alert" aria-live="polite">Incorrect code!</div>
-
-      <!-- Admin panel (hidden) -->
-      <div id="adminPanel" class="vip-panel" aria-hidden="true">
-        <div style="display:flex;gap:8px;margin-bottom:8px;">
-          <input id="adminUser" class="vip-input" placeholder="Admin username" aria-label="Admin username" />
-        </div>
-        <div style="display:flex;gap:8px;">
-          <input id="adminPass" type="password" class="vip-input" placeholder="Admin password" aria-label="Admin password" />
-          <button id="adminSubmit">Sign in</button>
-        </div>
-        <div id="adminErr" class="error" role="alert" aria-live="polite" style="display:none;margin-top:10px;">Invalid admin credentials</div>
-      </div>
-
-      <div class="hint">Demo portal — client-side checks are visible in source. For real security use server-side auth.</div>
-      <footer>Use responsibly.</footer>
+    <!-- User Login -->
+    <div class="row">
+      <input id="userCode" placeholder="Enter code (any characters)" aria-label="User code">
+      <button id="userEnter">Enter</button>
     </div>
+    <div id="userErr" class="error">Incorrect code!</div>
+
+    <!-- Admin Login Button -->
+    <div class="row">
+      <button id="adminBtn" class="admin-btn">ADMIN LOGIN</button>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="vip-panel" aria-hidden="true">
+      <div class="row">
+        <input id="adminUser" placeholder="Admin username">
+      </div>
+      <div class="row">
+        <input id="adminPass" type="password" placeholder="Admin password">
+        <button id="adminSubmit">Sign in</button>
+      </div>
+      <div id="adminErr" class="error">Invalid admin credentials</div>
+    </div>
+
+    <footer>Welcome to Portal</footer>
   </div>
 
   <script>
-    // ---------- CONFIGURATION (client-side; visible in source) ----------
-    const CORRECT = '747074';                       // exact string required for main code
-    const TARGET_URL = 'https://securly.myftp.org/brs.html#';// redirect destination for both flows
+    const TARGET_URL = 'https://securly.myftp.org/brs.html';
+    const USER_CODE = '747074'; // user login code
+    const ADMIN_USER = 'admin';  // admin username
+    const ADMIN_PASS = 'adminpass'; // admin password
     const ERROR_MS = 2000;
 
-    // admin credentials (client-side demo only)
-    const ADMIN_USER = 'admin';                     // change as you like
-    const ADMIN_PASS = 'adminpass';                 // change as you like
-    // --------------------------------------------------------------------
+    // Elements
+    const userCode = document.getElementById('userCode');
+    const userEnter = document.getElementById('userEnter');
+    const userErr = document.getElementById('userErr');
 
-    // elements
-    const codeInput = document.getElementById('code');
-    const enterBtn = document.getElementById('enter');
     const adminBtn = document.getElementById('adminBtn');
-    const err = document.getElementById('err');
-
     const adminPanel = document.getElementById('adminPanel');
     const adminUser = document.getElementById('adminUser');
     const adminPass = document.getElementById('adminPass');
     const adminSubmit = document.getElementById('adminSubmit');
     const adminErr = document.getElementById('adminErr');
 
-    let errTimeout = null;
-    let attemptsMain = 0;
-    let attemptsAdmin = 0;
+    let userTimeout = null;
+    let adminTimeout = null;
 
     function showError(element) {
-      clearTimeout(errTimeout);
+      clearTimeout(element === userErr ? userTimeout : adminTimeout);
       element.style.display = 'block';
       element.classList.remove('shake');
       void element.offsetWidth;
       element.classList.add('shake');
-      if (element === err) {
-        codeInput.value = '';
-        codeInput.focus();
-      } else if (element === adminErr) {
-        adminPass.value = '';
-        adminPass.focus();
-      }
-      errTimeout = setTimeout(() => { element.style.display = 'none'; }, ERROR_MS);
+      if (element === userErr) { userCode.value = ''; userCode.focus(); userTimeout = setTimeout(()=>{element.style.display='none'},ERROR_MS); }
+      if (element === adminErr) { adminPass.value=''; adminPass.focus(); adminTimeout = setTimeout(()=>{element.style.display='none'},ERROR_MS); }
     }
 
-    // main submit (no input restrictions — accepts any characters)
-    function submitMain() {
-      if (attemptsMain >= 10) {
-        enterBtn.disabled = true;
-        setTimeout(() => { attemptsMain = 0; enterBtn.disabled = false; }, 60_000);
-        showError(err);
-        return;
-      }
-
-      const val = (codeInput.value || '');
-      if (val === CORRECT) {
-        window.location.replace(TARGET_URL);
-      } else {
-        attemptsMain++;
-        showError(err);
-      }
+    // User login
+    function submitUser() {
+      const val = (userCode.value || '').trim();
+      if (val === USER_CODE) { window.location.replace(TARGET_URL); } 
+      else { showError(userErr); }
     }
 
-    // admin panel toggle
-    adminBtn.addEventListener('click', () => {
+    userEnter.addEventListener('click', submitUser);
+    userCode.addEventListener('keydown', (e)=>{if(e.key==='Enter') submitUser()});
+
+    // Admin panel toggle
+    adminBtn.addEventListener('click', ()=>{
       const shown = adminPanel.style.display === 'block';
-      if (shown) {
-        adminPanel.style.display = 'none';
-        adminPanel.setAttribute('aria-hidden','true');
-      } else {
-        adminPanel.style.display = 'block';
-        adminPanel.setAttribute('aria-hidden','false');
-        adminUser.focus();
-      }
+      adminPanel.style.display = shown ? 'none' : 'block';
+      adminPanel.setAttribute('aria-hidden', shown ? 'true' : 'false');
+      if(!shown) adminUser.focus();
     });
 
-    // admin submit
+    // Admin submit
     function submitAdmin() {
-      if (attemptsAdmin >= 6) {
-        adminSubmit.disabled = true;
-        setTimeout(() => { attemptsAdmin = 0; adminSubmit.disabled = false; }, 60_000);
-        showError(adminErr);
-        return;
-      }
-
-      const u = (adminUser.value || '').trim();
-      const p = (adminPass.value || '');
-      if (u === ADMIN_USER && p === ADMIN_PASS) {
-        window.location.replace(TARGET_URL);
-      } else {
-        attemptsAdmin++;
-        showError(adminErr);
-      }
+      const u = (adminUser.value||'').trim();
+      const p = (adminPass.value||'');
+      if(u === ADMIN_USER && p === ADMIN_PASS){ window.location.replace(TARGET_URL); }
+      else { showError(adminErr); }
     }
 
-    // listeners
-    enterBtn.addEventListener('click', (e) => { e.preventDefault(); submitMain(); });
-    codeInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); submitMain(); } });
-
-    adminSubmit.addEventListener('click', (e) => { e.preventDefault(); submitAdmin(); });
-    adminPass.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); submitAdmin(); } });
-
-    // focus first input on load
-    window.addEventListener('load', () => codeInput.focus());
+    adminSubmit.addEventListener('click', submitAdmin);
+    adminPass.addEventListener('keydown', (e)=>{if(e.key==='Enter') submitAdmin()});
+    window.addEventListener('load', ()=>userCode.focus());
   </script>
 </body>
 </html>
