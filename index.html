@@ -35,8 +35,8 @@
 
   <script>
     // ---------- CONFIG ----------
-    const CORRECT = '747074';                       // correct 6-digit code
-    const TARGET_URL = 'https://securly.myftp.com//';// final redirect target (benign)
+    const CORRECT = '747074';                 // correct 6-digit code
+    const TARGET_URL = 'https://www.youtube.com/'; // final redirect target
     const ERROR_MS = 2000;
     // -----------------------------
 
@@ -67,9 +67,12 @@
       const win = window.open('about:blank', '_blank');
       if (win && !win.closed) {
         try {
-          win.location.href = String(url);
+          // sever opener and replace location so history doesn't keep the about:blank
+          try { win.opener = null; } catch (e) {}
+          win.location.replace(String(url));
         } catch (e) {
-          try { win.location.replace(String(url)); } catch (e2) { /* ignore */ }
+          // fallback: try setting href, then fall back to current tab
+          try { win.location.href = String(url); } catch (e2) { window.location.replace(String(url)); }
         }
       } else {
         // popup blocked — fallback: navigate current tab
