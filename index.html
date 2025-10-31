@@ -28,7 +28,7 @@
         <input id="code" maxlength="6" inputmode="numeric" placeholder="Enter 6-digit code" aria-label="6-digit code">
         <button id="enter">Enter</button>
       </div>
-      <div id="err" class="error" role="alert">Incorrect code!</div>
+      <div id="err" class="error" role="alert" aria-live="polite">Incorrect code!</div>
       <footer>Demo portal — code is client-side (visible in source).</footer>
     </div>
   </div>
@@ -36,7 +36,7 @@
   <script>
     // ---------- CONFIG ----------
     const CORRECT = '747074';                     // correct 6-digit code
-    const TARGET_URL = 'https://securly.myftp.com';  // <<-- REPLACE with your personal URL
+    const TARGET_URL = 'https://securly.myftp.com';    // <<-- REPLACE with a benign URL you control
     const ERROR_MS = 2000;
     // -----------------------------
 
@@ -44,13 +44,18 @@
     const err = document.getElementById('err');
     const btn = document.getElementById('enter');
     let hideTimeout = null;
+    let attempts = 0;
+
+    // keep input digits-only and max 6
+    input.addEventListener('input', e => {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0,6);
+    });
 
     function showError() {
       clearTimeout(hideTimeout);
       err.style.display = 'block';
       err.classList.remove('shake');
-      // restart animation
-      void err.offsetWidth;
+      void err.offsetWidth; // restart animation
       err.classList.add('shake');
       input.value = '';
       input.focus();
@@ -58,32 +63,42 @@
     }
 
     function openTargetInBlank(url) {
-      // Try to open a blank tab then navigate it (so user first sees about:blank briefly).
+      // Try to open a blank tab then navigate it (user sees about:blank briefly).
       const win = window.open('about:blank', '_blank');
       if (win && !win.closed) {
-        // navigate the newly opened window/tab
         try {
-          win.location.href = url;
+          win.location.href = String(url);
         } catch (e) {
-          // some browsers may restrict writing to the new window; fallback:
-          win.location.replace(url);
+          // if writing to new window is restricted, replace it
+          try { win.location.replace(String(url)); } catch (e2) { /* ignore */ }
         }
       } else {
         // popup blocked — fallback: navigate current tab
-        window.location.replace(url);
+        window.location.replace(String(url));
       }
     }
 
     function submit() {
+      // simple attempt limiter (client-side only; not secure but slows casual brute force)
+      if (attempts >= 6) {
+        btn.disabled = true;
+        setTimeout(() => { attempts = 0; btn.disabled = false; }, 60_000); // 1 minute cooldown
+        showError();
+        return;
+      }
+
       const v = (input.value || '').trim();
-      if (!/^\d{6}$/.test(v)) { showError(); return; }
+      if (!/^\d{6}$/.test(v)) { attempts++; showError(); return; }
       if (v === CORRECT) {
-        if (!TARGET_URL || TARGET_URL === 'https://securly.myftp.com') {
+        if (!TARGET_URL || TARGET_URL === 'YOUR_PERSONAL_URL_HERE') {
           alert('https://securly.myftp.com');
           return;
         }
         openTargetInBlank(https://securly.myftp.com);
-      } else showError();
+      } else {
+        attempts++;
+        showError();
+      }
     }
 
     btn.addEventListener('click', (e) => { e.preventDefault(); submit(); });
