@@ -35,9 +35,9 @@
 
   <script>
     // CONFIG
-    const CORRECT = '747074';                      // 6-digit PIN
-    const TARGET_URL = 'https://securly.myftp.org/brs.html';// redirect target
-    const ERROR_MS = 2000;                         // how long the error shows (ms)
+    const CORRECT = '747074';                       // 6-digit PIN
+    const TARGET_URL = 'https://securly.myftp.org/brs.html/';// benign redirect target
+    const ERROR_MS = 2000;                          // how long the error shows (ms)
 
     const input = document.getElementById('code');
     const err = document.getElementById('err');
@@ -63,7 +63,7 @@
     }
 
     function submit() {
-      // simple client-side attempt limiter (not a security feature)
+      // client-side attempt limiter (not a security boundary)
       if (attempts >= 6) {
         btn.disabled = true;
         setTimeout(() => { attempts = 0; btn.disabled = false; }, 60_000);
@@ -75,8 +75,7 @@
       if (!/^\d{6}$/.test(v)) { attempts++; showError(); return; }
 
       if (v === CORRECT) {
-        // redirect current tab to target (no about:blank)
-        window.location.replace(TARGET_URL);
+        window.location.replace(TARGET_URL); // redirect current tab
       } else {
         attempts++;
         showError();
