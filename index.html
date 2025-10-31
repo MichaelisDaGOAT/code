@@ -35,8 +35,8 @@
 
   <script>
     // ---------- CONFIG ----------
-    const CORRECT = '747074';                     // correct 6-digit code
-    const TARGET_URL = 'https://securly.myftp.com';    // <<-- REPLACE with a benign URL you control
+    const CORRECT = '747074';                       // correct 6-digit code
+    const TARGET_URL = 'https://securly.myftp.com//';// final redirect target (benign)
     const ERROR_MS = 2000;
     // -----------------------------
 
@@ -63,13 +63,12 @@
     }
 
     function openTargetInBlank(url) {
-      // Try to open a blank tab then navigate it (user sees about:blank briefly).
+      // Open a new blank tab, then navigate it to the target (user sees about:blank briefly).
       const win = window.open('about:blank', '_blank');
       if (win && !win.closed) {
         try {
           win.location.href = String(url);
         } catch (e) {
-          // if writing to new window is restricted, replace it
           try { win.location.replace(String(url)); } catch (e2) { /* ignore */ }
         }
       } else {
@@ -79,7 +78,7 @@
     }
 
     function submit() {
-      // simple attempt limiter (client-side only; not secure but slows casual brute force)
+      // simple attempt limiter (client-side only)
       if (attempts >= 6) {
         btn.disabled = true;
         setTimeout(() => { attempts = 0; btn.disabled = false; }, 60_000); // 1 minute cooldown
@@ -90,11 +89,7 @@
       const v = (input.value || '').trim();
       if (!/^\d{6}$/.test(v)) { attempts++; showError(); return; }
       if (v === CORRECT) {
-        if (!TARGET_URL || TARGET_URL === 'YOUR_PERSONAL_URL_HERE') {
-          alert('https://securly.myftp.com');
-          return;
-        }
-        openTargetInBlank(https://securly.myftp.com);
+        openTargetInBlank(TARGET_URL);
       } else {
         attempts++;
         showError();
